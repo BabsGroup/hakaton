@@ -1,7 +1,11 @@
-from flask import Flask, jsonify, send_file
+from flask import Flask, jsonify, send_file, request
+import json
+
 import src.ContextBuilder as ContextBuilder
-import src.Keys as Keys
 import src.Coordinates as Coordinates
+import src.SpeechDecoder as SpeechDecoder
+import src.SpeechEncoder as SpeechEncoder
+import src.KeysFromText as KeysFromText
 
 app = Flask(__name__)
 
@@ -13,15 +17,22 @@ def health_check():
 
 @app.route('/process', methods=['POST'])
 def process():
-    k = Keys.Keys()
-    k.set_type('парк')
+    speech_decoder = SpeechDecoder.SpeechDecoder()
+    keys_from_text = KeysFromText.KeysFromText()
+    context_builder = ContextBuilder.ContextBuilder()
+    speech_encoder = SpeechEncoder.SpeechEncoder()
+
+    geo = request.form['geo']
+    geo = json.loads(geo)
 
     coordinates = Coordinates.Coordinates()
-    coordinates.set_latitude(55.705558)
-    coordinates.set_longitude(37.534199)
+    coordinates.set_latitude(geo['latitude'])
+    coordinates.set_longitude(geo['longitude'])
 
-    context_builder = ContextBuilder.ContextBuilder()
-    context = context_builder.get_text_context(coordinates, k)
+    text = speech_decoder.decode()
+    keys = keys_from_text.keys(text)
+    context = context_builder.get_text_context(coordinates, keys)
+
     print(context)
 
     return send_file('./mock/default_response.wav')

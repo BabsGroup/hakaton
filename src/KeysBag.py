@@ -1,4 +1,4 @@
-class Keys:
+class KeysBag:
 
     def __init__(self):
         pass
