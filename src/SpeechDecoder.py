@@ -4,4 +4,4 @@ class SpeechDecoder:
         pass
 
     def decode(self):
-        return 'Что это за памятник мной?'
+        return 'Что это за памятник?'

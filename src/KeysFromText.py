@@ -6,6 +6,6 @@ class KeysFromText:
 
     def keys(self, text):
         k = KeysBag.KeysBag()
-        k.set_type('строение')
+        k.set_type('памятник')
 
         return k

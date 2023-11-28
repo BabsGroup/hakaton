@@ -4,7 +4,7 @@ def p_build_street_query(coordinates):
     la = coordinates.latitude
     lo = coordinates.longitude
 
-    diff = 0.003
+    diff = 0.005
     la1 = la - diff
     la2 = la + diff
 
@@ -37,7 +37,7 @@ def p_build_query(coordinates, where):
     la = coordinates.latitude
     lo = coordinates.longitude
 
-    diff = 0.001
+    diff = 0.005
     la1 = la - diff
     la2 = la + diff
 
