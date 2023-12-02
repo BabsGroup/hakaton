@@ -33,10 +33,7 @@ def synthesize(token, text, file):
     tok = grpc.access_token_call_credentials(token)
     ccc = grpc.composite_channel_credentials(scc, tok)
 
-    channel = grpc.secure_channel(
-        "smartspeech.sber.ru",
-        ccc
-    )
+    channel = grpc.secure_channel("smartspeech.sber.ru", ccc)
 
     stub = synthesis_pb2_grpc.SmartSpeechStub(channel)
 
@@ -45,9 +42,20 @@ def synthesize(token, text, file):
     con = stub.Synthesize(options)
 
     try:
-        with open(file, 'wb') as f:
-            for resp in con:
-                f.write(resp.data)
+        buffer = None
+        for resp in con:
+            if buffer is None:
+                buffer = resp.data
+            else:
+                buffer += resp.data
+
+            if buffer is not None and len(buffer) > 1024 * 32:
+                yield buffer
+                buffer = None
+
+        if buffer is not None:
+            yield buffer
+
     except grpc.RpcError as err:
         print('RPC error: code = {}, details = {}'.format(err.code(), err.details()))
     except Exception as exc:
@@ -56,8 +64,6 @@ def synthesize(token, text, file):
         print('Synthesis has finished')
     finally:
         channel.close()
-
-
 
 class SpeechEncoder:
     def __init__(self):
@@ -79,16 +85,7 @@ class SpeechEncoder:
         token = r.json()['access_token']
         file = f"./tmp/{random.randint(0, 1000000)}.wav"
 
-        synthesize(token, text, file)
+        def generator():
+            return synthesize(token, text, file)
 
-        return file
-        # return requests.post(
-        #     'https://smartspeech.sber.ru/rest/v1/text:synthesize?format=wav16&voice=Nec_24000',
-        #     data=text,
-        #     headers={
-        #         'Authorization': f"Bearer {r.json()['access_token']}",
-        #         'Content-Type': 'application/ssml',
-        #     },
-        #     verify=False,
-        #     stream=True,
-        # )
+        return generator
