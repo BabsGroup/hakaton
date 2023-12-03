@@ -149,7 +149,7 @@ class ContextBuilder:
 
     def find_current_place(self, coordinates, keys):
         where = ['AND 1=1', 'name IS NOT NULL']
-        diff = 0.005
+        diff = 0.01
 
         if len(keys.type) == 0:
             return ''
@@ -225,6 +225,8 @@ class ContextBuilder:
 
         return ''
 
+    # В будущем будем давать подсказки по местам, личностям, терминам
+    # Это сделано, чтобы потестить, будут ли эти подсказки нормально работать
     def build_tips(self, text, context):
         tips = ''
         if 'андре' in text.lower() and 'смирно' in text.lower():

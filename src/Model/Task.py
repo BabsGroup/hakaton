@@ -24,10 +24,12 @@ def init_task_table():
 
 def _insert_task(task):
     with conn.cursor() as cur:
-        cur.execute(f"""
+        q = f"""
         INSERT INTO request_tasks (id, latitude, longitude, filepath)
         VALUES ('{task.id}', {task.latitude}, {task.longitude}, '{task.filepath}');
-        """)
+        """
+        print (q)
+        cur.execute(q)
 
 def create_task(latitude, longitude, filepath):
     id = str(uuid.uuid4())

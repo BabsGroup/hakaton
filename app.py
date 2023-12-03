@@ -23,6 +23,9 @@ def health_check():
         ok=True
     )
 
+# Сделано с рассчетом на будущую асинхронность
+# Сервис может сам захотеть что-то отправить в приложение, ему достаточно будет
+# Скинуть ссылку на таску
 @app.route('/process/<id>', methods=['GET'])
 def process_task(id):
     task = Task.task_by_id(id)

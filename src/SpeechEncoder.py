@@ -27,7 +27,7 @@ TYPES_MAP = {
 
 def synthesize(token, text, file):
     scc = grpc.ssl_channel_credentials(
-        root_certificates=open('./russiantrustedca.pem', 'rb').read(),
+        root_certificates=open('/var/hack/MapsHackathonBackend/russiantrustedca.pem', 'rb').read(),
     )
 
     tok = grpc.access_token_call_credentials(token)

@@ -16,11 +16,23 @@ services:
       - pg_data:/var/lib/postgresql/data
     networks:
       - app
+#  wiki:
+#    container_name: wiki
+#    build:
+#      context: ./
+#      dockerfile: wiki/Dockerfile
+#    environment:
+#      - MARIADB_ROOT_PASSWORD=verySecret
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - wiki_data:/var/lib/mysql
+#    networks:
+#      - app
 
 networks:
   app:
 
 volumes:
   pg_data:
-
-
+  wiki_data:
